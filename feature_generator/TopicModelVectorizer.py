@@ -2,12 +2,13 @@ __author__ = 'defaultstr'
 from .base import Vectorizer
 from collections import Counter
 from gensim.models.lsimodel import LsiModel
+from gensim.models.ldamodel import LdaModel
 import numpy as np
 
 
-class LSIVectorizer(Vectorizer):
+class TopicModelVectorizer(Vectorizer):
     def __init__(self, n_grams=[1, 2, 3], n_topics=100, config_identifier='n_gram_123'):
-        super(LSIVectorizer, self).__init__(config_identifier=config_identifier)
+        super(TopicModelVectorizer, self).__init__(config_identifier=config_identifier)
         self._model = None
         self.n_topics = n_topics
         self.n_grams = n_grams
@@ -27,7 +28,7 @@ class LSIVectorizer(Vectorizer):
             indices = [self.dict[t] for t in self._tokenize(review)]
             cnt.update(indices)
             corpus.append(cnt.items())
-        self._model = LsiModel(corpus, num_topics=self.n_topics)
+        self._model = self.__class__.Model(corpus, num_topics=self.n_topics)
 
     def transform(self, X, y=None):
         N = len(X)
@@ -41,8 +42,19 @@ class LSIVectorizer(Vectorizer):
                 except KeyError:
                     pass
             cnt.update(indices)
-            ret[i, :] = [x[1] for x in self._model[cnt.items()]]
+            result = [0.0] * self.n_topics
+            for idx, x in self._model[cnt.items()]:
+                result[idx] = x
+            ret[i, :] = result
         return ret
 
     def get_dimension(self):
         return self.n_topics
+
+
+class LSIVectorizer(TopicModelVectorizer):
+    Model = LsiModel
+
+
+class LDAVectorizer(TopicModelVectorizer):
+    Model = LdaModel

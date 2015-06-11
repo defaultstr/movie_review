@@ -9,6 +9,8 @@ if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s: %(levelname)s : %(message)s', level=logging.DEBUG)
     vectorizers = [LSIVectorizer(n_grams=[1], n_topics=100, config_identifier='_100'),
                    LSIVectorizer(n_grams=[1], n_topics=40, config_identifier='_40'),
+                   LDAVectorizer(n_grams=[1], n_topics=100, config_identifier='_100'),
+                   LDAVectorizer(n_grams=[1], n_topics=40, config_identifier='_40'),
                    TfIdfVectorizer(n_grams=[1], config_identifier=''),
                    TfIdfVectorizer(n_grams=[1, 2], config_identifier='_bigram'),
                    TfIdfVectorizer(n_grams=[1, 2, 3], config_identifier='_trigram'),
