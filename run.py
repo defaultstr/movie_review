@@ -20,6 +20,7 @@ if __name__ == '__main__':
     vectorizers = [Word2VecVectorizer()]
     names, infos = extract_feature('./data/labeledTrainData.tsv',
                                    './data/labeledTestData.tsv',
+                                   './data/unlabeledTrainData.tsv',
                                    vectorizers=vectorizers)
     with open('./feature_list.txt', 'w') as fout:
         for name, info in zip(names, infos):

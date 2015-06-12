@@ -12,7 +12,7 @@ class Word2VecVectorizer(Vectorizer):
                  sample=1e-3,
                  window=10,
                  min_count=40,
-                 pooling_method='average'
+                 pooling_method='average' #'average', 'max'
                  ):
         super(Word2VecVectorizer, self).__init__(config_identifier=config_identifier)
         self.dimension = dimension
@@ -36,15 +36,14 @@ class Word2VecVectorizer(Vectorizer):
     def transform(self, X, y=None):
         ret = np.zeros((len(X), self.dimension), dtype='float32')
         for idx, review in enumerate(X):
-            vec_buf = np.zeros((self.dimension,), dtype='float32')
-            n_tokens = 0
+            tokens = self._tokenize(review)
+            vec_buf = np.zeros((len(tokens), self.dimension), dtype='float32')
             index2word = set(self._model.index2word)
-            for t in self._tokenize(review):
+            for t in tokens:
                 if t in index2word:
-                    n_tokens += 1
-                    vec_buf = np.add(vec_buf, self._model[t])
-            vec_buf /= n_tokens
-            ret[idx] = vec_buf
+                    vec_buf[i, :] = self._model[t]
+            if pooling_method == 'average':
+                ret[idx] = np.average(vec_buf, axis=0)
         return ret
 
     def get_dimension(self):
