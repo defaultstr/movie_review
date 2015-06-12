@@ -17,13 +17,16 @@ def clean_review(df):
     return cleaned_review
 
 
-def extract_feature(train_file, test_file, vectorizers=[], root_path='./'):
+def extract_feature(train_file, test_file, unlabeled_file, vectorizers=[], root_path='./'):
     train = pd.read_csv(train_file, header=0, delimiter='\t', quoting=3)
     test = pd.read_csv(test_file, header=0, delimiter='\t', quoting=3)
+    unlabeled = pd.read_csv(unlabeled_file, header=0, delimiter='\t', quoting=3)
+
     y_train = map(int, list(train['sentiment']))
     y_test = map(int, list(test['sentiment']))
     review_train = clean_review(train)
     review_test = clean_review(test)
+    review_unlabeled = clean_review(unlabeled)
 
     #make directory to store features
     feature_path = path.join(root_path, 'feature')
@@ -42,7 +45,9 @@ def extract_feature(train_file, test_file, vectorizers=[], root_path='./'):
 
         logging.log(logging.DEBUG, 'Initializing...')
         t0 = time()
-        vectorizer.initialize()
+        vectorizer.initialize(review_train,
+                              review_test,
+                              review_unlabeled)
         t1 = time()
         info['initial_time'] = t1-t0
 
@@ -78,7 +83,7 @@ class Vectorizer(object):
         if 'config_identifier' in kwargs:
             self.config_identifier = kwargs['config_identifier']
 
-    def initialize(self):
+    def initialize(self, train_X, test_X, unlabeled_X):
         pass
 
     def fit(self, X, y=None):

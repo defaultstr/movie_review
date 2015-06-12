@@ -17,6 +17,7 @@ if __name__ == '__main__':
                    NaiveBayesVectorizer(n_grams=[1], config_identifier=''),
                    NaiveBayesVectorizer(n_grams=[1, 2], config_identifier='_bigram'),
                    NaiveBayesVectorizer(n_grams=[1, 2, 3], config_identifier='_trigram')]
+    vectorizers = [Word2VecVectorizer()]
     names, infos = extract_feature('./data/labeledTrainData.tsv',
                                    './data/labeledTestData.tsv',
                                    vectorizers=vectorizers)
