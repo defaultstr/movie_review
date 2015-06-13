@@ -18,12 +18,14 @@ if __name__ == '__main__':
                    TfIdfVectorizer(n_grams=[1, 2, 3], config_identifier='_trigram'),
                    NaiveBayesVectorizer(n_grams=[1], config_identifier=''),
                    NaiveBayesVectorizer(n_grams=[1, 2], config_identifier='_bigram'),
-                   NaiveBayesVectorizer(n_grams=[1, 2, 3], config_identifier='_trigram')]
-    names, infos = extract_feature('./data/labeledTrainData.tsv',
-                                   './data/labeledTestData.tsv',
-                                   './data/unlabeledTrainData.tsv',
-                                   vectorizers=vectorizers)
+                   NaiveBayesVectorizer(n_grams=[1, 2, 3], config_identifier='_trigram'),
+                   Doc2VecVectorizer(),
+                   Doc2VecVectorizer(min_count=1, dimension=100, config_identifier='_100')]
+    g = extract_feature('./data/labeledTrainData.tsv',
+                        './data/labeledTestData.tsv',
+                        './data/unlabeledTrainData.tsv',
+                        vectorizers=vectorizers)
     with open('./feature_list.txt', 'w') as fout:
-        for name, info in zip(names, infos):
+        for name, info in g:
             print >>fout, '%s\t%s' % (name, json.dumps(info))
 

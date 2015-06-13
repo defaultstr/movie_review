@@ -35,12 +35,9 @@ def extract_feature(train_file, test_file, unlabeled_file, vectorizers=[], root_
     else:
         system('mkdir ' + feature_path)
 
-    names = []
-    infos = []
     for vectorizer in vectorizers:
         info = {}
         name = vectorizer.__class__.__name__ + vectorizer.config_identifier
-        names.append(name)
         logging.log(logging.DEBUG, 'Generating %s ...' % name)
 
         logging.log(logging.DEBUG, 'Initializing...')
@@ -71,9 +68,8 @@ def extract_feature(train_file, test_file, unlabeled_file, vectorizers=[], root_
         info['feature_dimension'] = vectorizer.get_dimension()
         logging.log(logging.DEBUG, 'Vectorizer info: ' + json.dumps(info))
 
-        infos.append(info)
+        yield name, info
 
-    return names, infos
 
 
 class Vectorizer(object):

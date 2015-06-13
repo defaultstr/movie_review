@@ -20,6 +20,7 @@ class Word2VecVectorizer(Vectorizer):
         self.window = window
         self.min_count = min_count
         self.n_grams = n_grams
+        self.pooling_method = pooling_method
 
     def initialize(self, train_X, test_X, unlabeled_X):
         tokens = [self._tokenize(x) for x in train_X] +\
@@ -39,10 +40,10 @@ class Word2VecVectorizer(Vectorizer):
             tokens = self._tokenize(review)
             vec_buf = np.zeros((len(tokens), self.dimension), dtype='float32')
             index2word = set(self._model.index2word)
-            for t in tokens:
+            for i, t in enumerate(tokens):
                 if t in index2word:
                     vec_buf[i, :] = self._model[t]
-            if pooling_method == 'average':
+            if self.pooling_method == 'average':
                 ret[idx] = np.average(vec_buf, axis=0)
         return ret
 
