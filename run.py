@@ -7,7 +7,9 @@ import json
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s: %(levelname)s : %(message)s', level=logging.DEBUG)
-    vectorizers = [Word2VecVectorizer(),
+    vectorizers = [Doc2VecVectorizer(min_count=40, dimension=300, config_identifier='_300'),
+                   Doc2VecVectorizer(min_count=1, dimension=100, config_identifier='_100'),
+                   Word2VecVectorizer(),
                    Word2VecVectorizer(min_count=1, dimension=100, config_identifier='_100'),
                    LSIVectorizer(n_grams=[1], n_topics=100, config_identifier='_100'),
                    LSIVectorizer(n_grams=[1], n_topics=40, config_identifier='_40'),
