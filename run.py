@@ -28,4 +28,5 @@ if __name__ == '__main__':
     with open('./feature_list.txt', 'w') as fout:
         for name, info in g:
             print >>fout, '%s\t%s' % (name, json.dumps(info))
+            fout.flush()
 
