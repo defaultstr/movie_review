@@ -44,7 +44,7 @@ class Doc2VecVectorizer(Vectorizer):
             self.doc2id[x] = _id
             print >>fout, '_*%d %s' % (_id, x)
             _id += 1
-        system('gshuf ./feature_generator/doc2vec/alldata-id.txt > ./feature_generator/doc2vec/alldata-id-shuf.txt')
+        system('shuf ./feature_generator/doc2vec/alldata-id.txt > ./feature_generator/doc2vec/alldata-id-shuf.txt')
 
         #run word2vec
         command = ('./feature_generator/doc2vec/word2vec -train ' +

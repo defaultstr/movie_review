@@ -38,13 +38,15 @@ class Word2VecVectorizer(Vectorizer):
         ret = np.zeros((len(X), self.dimension), dtype='float32')
         for idx, review in enumerate(X):
             tokens = self._tokenize(review)
-            vec_buf = np.zeros((len(tokens), self.dimension), dtype='float32')
-            index2word = set(self._model.index2word)
+            vec_buf = np.zeros((self.dimension, ), dtype='float32')
+            cnt = 0
             for i, t in enumerate(tokens):
-                if t in index2word:
-                    vec_buf[i, :] = self._model[t]
-            if self.pooling_method == 'average':
-                ret[idx] = np.average(vec_buf, axis=0)
+                try:
+                    vec_buf += self._model[t]
+                    cnt += 1
+                except KeyError:
+                    pass
+            ret[idx] = vec_buf / cnt
         return ret
 
     def get_dimension(self):
